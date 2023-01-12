@@ -1,5 +1,3 @@
-use std::str::from_utf8;
-
 use pyo3::prelude::*;
 
 #[pyfunction]
@@ -46,7 +44,6 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
             for (i, b) in bytes[cursor+8..cursor+remainder].iter().enumerate() {
                 tail[i] = *b;
             }
-            println!("{:?}", from_utf8(&tail));
             let mut k2 = u64::from_le_bytes(tail);
             remainder = 8;
             k2 = k2.wrapping_mul(c2);
@@ -58,7 +55,6 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
         for (i, b) in bytes[cursor..cursor+remainder].iter().enumerate() {
             tail[i] = *b;
         }
-        println!("{:?}", from_utf8(&tail));
         let mut k1 = u64::from_le_bytes(tail);
         k1 = k1.wrapping_mul(c1);
         k1 = k1.rotate_left(31);
@@ -76,8 +72,6 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
 
     h1 = h1.wrapping_add(h2);
     h2 = h2.wrapping_add(h1);
-
-    println!("{:x}", (h2 as u128) << 64 | h1 as u128);
 
     (h2 as u128) << 64 | h1 as u128
 }

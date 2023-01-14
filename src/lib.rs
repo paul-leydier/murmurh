@@ -43,22 +43,16 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
             for (i, b) in bytes[cursor + 8..cursor + remainder].iter().enumerate() {
                 tail[i] = *b;
             }
-            let mut k2 = u64::from_le_bytes(tail);
+            let k2 = u64::from_le_bytes(tail);
             remainder = 8;
-            k2 = k2.wrapping_mul(C2);
-            k2 = k2.rotate_left(33);
-            k2 = k2.wrapping_mul(C1);
-            h2 ^= k2;
+            h2 ^= k2.wrapping_mul(C2).rotate_left(33).wrapping_mul(C1);
         }
         let mut tail: [u8; 8] = [0; 8];
         for (i, b) in bytes[cursor..cursor + remainder].iter().enumerate() {
             tail[i] = *b;
         }
-        let mut k1 = u64::from_le_bytes(tail);
-        k1 = k1.wrapping_mul(C1);
-        k1 = k1.rotate_left(31);
-        k1 = k1.wrapping_mul(C2);
-        h1 ^= k1;
+        let k1 = u64::from_le_bytes(tail);
+        h1 ^= k1.wrapping_mul(C1).rotate_left(31).wrapping_mul(C2);
     }
 
     h1 ^= len as u64;

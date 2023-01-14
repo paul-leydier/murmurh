@@ -17,24 +17,22 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
     const C4: u64 = 0x38495ab5;
 
     // Body
-    for chunk in bytes.chunks_exact(16){
-        let mut k1 = u64::from_le_bytes(chunk[0..8].try_into().expect("oups"));
-        let mut k2 = u64::from_le_bytes(chunk[8..16].try_into().expect("oups"));
+    for chunk in bytes.chunks_exact(16) {
+        let k1 = u64::from_le_bytes(chunk[0..8].try_into().expect("oups"));
+        let k2 = u64::from_le_bytes(chunk[8..16].try_into().expect("oups"));
 
-        k1 = k1.wrapping_mul(C1);
-        k1 = k1.rotate_left(31);
-        k1 = k1.wrapping_mul(C2);
-        h1 ^= k1;
-        h1 = h1.rotate_left(27);
-        h1 = h1.wrapping_add(h2);
-        h1 = h1.wrapping_mul(5).wrapping_add(C3);
-        k2 = k2.wrapping_mul(C2);
-        k2 = k2.rotate_left(33);
-        k2 = k2.wrapping_mul(C1);
-        h2 ^= k2;
-        h2 = h2.rotate_left(31);
-        h2 = h2.wrapping_add(h1);
-        h2 = h2.wrapping_mul(5).wrapping_add(C4);
+        h1 ^= k1.wrapping_mul(C1).rotate_left(31).wrapping_mul(C2);
+        h1 = h1
+            .rotate_left(27)
+            .wrapping_add(h2)
+            .wrapping_mul(5)
+            .wrapping_add(C3);
+        h2 ^= k2.wrapping_mul(C2).rotate_left(33).wrapping_mul(C1);
+        h2 = h2
+            .rotate_left(31)
+            .wrapping_add(h1)
+            .wrapping_mul(5)
+            .wrapping_add(C4);
     }
 
     // Tail

@@ -99,7 +99,7 @@ mod test {
     }
 
     #[test]
-    fn test_hello() {
+    fn test_16chars() {
         let result = mmh3_128_x64_bytes("hello world!1234".as_bytes(), 0);
         assert_eq!(result, 240867822025444006610977441818626719586);
     }

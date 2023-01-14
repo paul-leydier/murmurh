@@ -38,7 +38,7 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
     let mut remainder = len % 16;
     let cursor = len - remainder;
     if remainder > 0 {
-        if remainder >= 8 {
+        if remainder > 8 {
             let mut tail: [u8; 8] = [0; 8];
             for (i, b) in bytes[cursor + 8..cursor + remainder].iter().enumerate() {
                 tail[i] = *b;

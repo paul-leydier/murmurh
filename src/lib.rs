@@ -71,10 +71,12 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
 
 #[inline]
 fn fmix64(mut k: u64) -> u64 {
+    const C5: u64 = 0xff51afd7ed558ccd;
+    const C6: u64 = 0xc4ceb9fe1a85ec53;
     k ^= k >> 33;
-    k = k.wrapping_mul(0xff51afd7ed558ccd);
+    k = k.wrapping_mul(C5);
     k ^= k >> 33;
-    k = k.wrapping_mul(0xc4ceb9fe1a85ec53);
+    k = k.wrapping_mul(C6);
     k ^= k >> 33;
     k
 }

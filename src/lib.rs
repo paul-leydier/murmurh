@@ -11,28 +11,30 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
     let len = bytes.len();
     let mut h1 = seed;
     let mut h2 = seed;
-    let c1: u64 = 0x87c37b91114253d5;
-    let c2: u64 = 0x4cf5ad432745937f;
+    const C1: u64 = 0x87c37b91114253d5;
+    const C2: u64 = 0x4cf5ad432745937f;
+    const C3: u64 = 0x52dce729;
+    const C4: u64 = 0x38495ab5;
 
     // Body
     for chunk in bytes.chunks_exact(16){
         let mut k1 = u64::from_le_bytes(chunk[0..8].try_into().expect("oups"));
         let mut k2 = u64::from_le_bytes(chunk[8..16].try_into().expect("oups"));
 
-        k1 = k1.wrapping_mul(c1);
+        k1 = k1.wrapping_mul(C1);
         k1 = k1.rotate_left(31);
-        k1 = k1.wrapping_mul(c2);
+        k1 = k1.wrapping_mul(C2);
         h1 ^= k1;
         h1 = h1.rotate_left(27);
         h1 = h1.wrapping_add(h2);
-        h1 = h1.wrapping_mul(5).wrapping_add(0x52dce729);
-        k2 = k2.wrapping_mul(c2);
+        h1 = h1.wrapping_mul(5).wrapping_add(C3);
+        k2 = k2.wrapping_mul(C2);
         k2 = k2.rotate_left(33);
-        k2 = k2.wrapping_mul(c1);
+        k2 = k2.wrapping_mul(C1);
         h2 ^= k2;
         h2 = h2.rotate_left(31);
         h2 = h2.wrapping_add(h1);
-        h2 = h2.wrapping_mul(5).wrapping_add(0x38495ab5);
+        h2 = h2.wrapping_mul(5).wrapping_add(C4);
     }
 
     // Tail
@@ -46,9 +48,9 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
             }
             let mut k2 = u64::from_le_bytes(tail);
             remainder = 8;
-            k2 = k2.wrapping_mul(c2);
+            k2 = k2.wrapping_mul(C2);
             k2 = k2.rotate_left(33);
-            k2 = k2.wrapping_mul(c1);
+            k2 = k2.wrapping_mul(C1);
             h2 ^= k2;
         }
         let mut tail: [u8; 8] = [0; 8];
@@ -56,9 +58,9 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
             tail[i] = *b;
         }
         let mut k1 = u64::from_le_bytes(tail);
-        k1 = k1.wrapping_mul(c1);
+        k1 = k1.wrapping_mul(C1);
         k1 = k1.rotate_left(31);
-        k1 = k1.wrapping_mul(c2);
+        k1 = k1.wrapping_mul(C2);
         h1 ^= k1;
     }
 

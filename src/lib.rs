@@ -105,6 +105,12 @@ mod test {
     }
 
     #[test]
+    fn test_24chars() {
+        let result = mmh3_128_x64_bytes("hello world!123456789012".as_bytes(), 0);
+        assert_eq!(result, 237085087629596244627904512008431960258);
+    }
+
+    #[test]
     fn test_foo() {
         let result = mmh3_128_x64_bytes("foo".as_bytes(), 0);
         assert_eq!(result, 168394135621993849475852668931176482145);

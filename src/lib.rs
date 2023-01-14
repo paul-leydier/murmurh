@@ -8,19 +8,18 @@ fn mmh3_128_x64(key: String, seed: u64) -> PyResult<String> {
 }
 
 fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
-    let len = bytes.len();
-    let mut h1 = seed;
-    let mut h2 = seed;
     const C1: u64 = 0x87c37b91114253d5;
     const C2: u64 = 0x4cf5ad432745937f;
     const C3: u64 = 0x52dce729;
     const C4: u64 = 0x38495ab5;
+    let len = bytes.len();
+    let mut h1 = seed;
+    let mut h2 = seed;
 
     // Body
     for chunk in bytes.chunks_exact(16) {
         let k1 = u64::from_le_bytes(chunk[0..8].try_into().expect("oups"));
         let k2 = u64::from_le_bytes(chunk[8..16].try_into().expect("oups"));
-
         h1 ^= k1.wrapping_mul(C1).rotate_left(31).wrapping_mul(C2);
         h1 = h1
             .rotate_left(27)
@@ -41,7 +40,7 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
     if remainder > 0 {
         if remainder >= 8 {
             let mut tail: [u8; 8] = [0; 8];
-            for (i, b) in bytes[cursor+8..cursor+remainder].iter().enumerate() {
+            for (i, b) in bytes[cursor + 8..cursor + remainder].iter().enumerate() {
                 tail[i] = *b;
             }
             let mut k2 = u64::from_le_bytes(tail);
@@ -52,7 +51,7 @@ fn mmh3_128_x64_bytes(bytes: &[u8], seed: u64) -> u128 {
             h2 ^= k2;
         }
         let mut tail: [u8; 8] = [0; 8];
-        for (i, b) in bytes[cursor..cursor+remainder].iter().enumerate() {
+        for (i, b) in bytes[cursor..cursor + remainder].iter().enumerate() {
             tail[i] = *b;
         }
         let mut k1 = u64::from_le_bytes(tail);
@@ -123,7 +122,8 @@ mod test {
 
     #[test]
     fn test_fox() {
-        let result = mmh3_128_x64_bytes("The quick brown fox jumps over the lazy dog.".as_bytes(), 0);
+        let result =
+            mmh3_128_x64_bytes("The quick brown fox jumps over the lazy dog.".as_bytes(), 0);
         assert_eq!(result, 140055101589960098446263325149249471177);
     }
 

@@ -3,16 +3,16 @@ use pyo3::types::PyBytes;
 
 #[pyfunction]
 #[pyo3(text_signature = "(key, /, seed = 0)")]
-fn mmh3_128_x64_bytes(py: Python, key: String, seed: u64) -> PyResult<&PyBytes> {
+fn mmh3_128_x64_bytes(py: Python, key: String, seed: u64) -> &PyBytes {
     let hashed = _mmh3_128_x64(key.as_bytes(), seed).to_le_bytes();
-    Ok(PyBytes::new(py, hashed.as_slice()))
+    PyBytes::new(py, hashed.as_slice())
 }
 
 #[pyfunction]
 #[pyo3(text_signature = "(key, /, seed = 0)")]
-fn mmh3_128_x64(key: String, seed: u64) -> PyResult<String> {
+fn mmh3_128_x64(key: String, seed: u64) -> String {
     let hashed = _mmh3_128_x64(key.as_bytes(), seed);
-    Ok(format!("{:x}", hashed))
+    format!("{:x}", hashed)
 }
 
 fn _mmh3_128_x64(bytes: &[u8], seed: u64) -> u128 {

@@ -3,15 +3,21 @@ use pyo3::types::PyBytes;
 
 #[pyfunction]
 #[pyo3(text_signature = "(key, /, seed = 0)")]
-fn mmh3_128_x64_bytes(py: Python, key: String, seed: u64) -> &PyBytes {
-    let hashed = _mmh3_128_x64(key.as_bytes(), seed).to_le_bytes();
+fn mmh3_128_x64(key: String, seed: Option<u64>) -> u128 {
+    _mmh3_128_x64(key.as_bytes(), seed.unwrap_or_default())
+}
+
+#[pyfunction]
+#[pyo3(text_signature = "(key, /, seed = 0)")]
+fn mmh3_128_x64_bytes(py: Python, key: String, seed: Option<u64>) -> &PyBytes {
+    let hashed = _mmh3_128_x64(key.as_bytes(), seed.unwrap_or_default()).to_le_bytes();
     PyBytes::new(py, hashed.as_slice())
 }
 
 #[pyfunction]
 #[pyo3(text_signature = "(key, /, seed = 0)")]
-fn mmh3_128_x64(key: String, seed: u64) -> String {
-    let hashed = _mmh3_128_x64(key.as_bytes(), seed);
+fn mmh3_128_x64_hex(key: String, seed: Option<u64>) -> String {
+    let hashed = _mmh3_128_x64(key.as_bytes(), seed.unwrap_or_default());
     format!("{:x}", hashed)
 }
 
@@ -92,8 +98,9 @@ fn fmix64(mut k: u64) -> u64 {
 /// A Python module implemented in Rust.
 #[pymodule]
 fn murmurh(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(mmh3_128_x64_bytes, m)?)?;
     m.add_function(wrap_pyfunction!(mmh3_128_x64, m)?)?;
+    m.add_function(wrap_pyfunction!(mmh3_128_x64_bytes, m)?)?;
+    m.add_function(wrap_pyfunction!(mmh3_128_x64_hex, m)?)?;
     Ok(())
 }
 

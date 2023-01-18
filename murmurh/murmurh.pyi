@@ -1,11 +1,11 @@
-def mmh3_128_x64(key: str, seed: int = 0) -> int:
+def hash(key: str, seed: int = 0, arch: str = "x64", size: int = 128) -> int:
     """ """
 
 
-def mmh3_128_x64_hex(key: str, seed: int = 0) -> str:
+def hash_hex(key: str, seed: int = 0, arch: str = "x64", size: int = 128) -> str:
     """ """
 
 
 
-def mmh3_128_x64_bytes(key: str, seed: int = 0) -> bytes:
+def hash_bytes(key: str, seed: int = 0, arch: str = "x64", size: int = 128) -> bytes:
     """ """

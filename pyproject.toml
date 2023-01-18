@@ -4,6 +4,16 @@ build-backend = "maturin"
 
 [project]
 name = "murmurh"
+description = "Python bindings for a Rust implementation of aapleby's MurMurHash algorithm."
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+keywords = ["hash", "murmurhash", "murmur", "mmh", "mmh3", "non-cryptographic", "fast"]
+authors = [
+    {name = "Paul Leydier", email = "paulleydier5@gmail.com"}
+]
+maintainers = [
+    {name = "Paul Leydier", email = "paulleydier5@gmail.com"}
+]
 requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Rust",
@@ -11,4 +21,6 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
-
+[project.urls]
+documentation = "https://github.com/paul-leydier/murmurh"
+repository = "https://github.com/paul-leydier/murmurh"

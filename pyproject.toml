@@ -6,7 +6,7 @@ build-backend = "maturin"
 name = "murmurh"
 description = "Python bindings for a Rust implementation of aapleby's MurMurHash algorithm."
 readme = "README.md"
-license = {file = "LICENSE.txt"}
+license = {file = "LICENSE"}
 keywords = ["hash", "murmurhash", "murmur", "mmh", "mmh3", "non-cryptographic", "fast"]
 authors = [
     {name = "Paul Leydier", email = "paulleydier5@gmail.com"}

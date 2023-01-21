@@ -1,9 +1,14 @@
 use std::convert::TryInto;
 
+const C1: u64 = 0x87c37b91114253d5;
+const C2: u64 = 0x4cf5ad432745937f;
+const C3: u64 = 0x52dce729;
+const C4: u64 = 0x38495ab5;
+const C5: u64 = 0xff51afd7ed558ccd;
+const C6: u64 = 0xc4ceb9fe1a85ec53;
+
 #[inline]
 fn fmix64(mut k: u64) -> u64 {
-    const C5: u64 = 0xff51afd7ed558ccd;
-    const C6: u64 = 0xc4ceb9fe1a85ec53;
     k ^= k >> 33;
     k = k.wrapping_mul(C5);
     k ^= k >> 33;
@@ -13,10 +18,6 @@ fn fmix64(mut k: u64) -> u64 {
 }
 
 pub fn hash_128(bytes: &[u8], seed: u64) -> u128 {
-    const C1: u64 = 0x87c37b91114253d5;
-    const C2: u64 = 0x4cf5ad432745937f;
-    const C3: u64 = 0x52dce729;
-    const C4: u64 = 0x38495ab5;
     let len = bytes.len();
     let mut h1 = seed;
     let mut h2 = seed;

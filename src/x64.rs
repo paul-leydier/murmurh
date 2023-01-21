@@ -1,3 +1,4 @@
+use std::cmp::min;
 use std::convert::TryInto;
 
 const C1: u64 = 0x87c37b91114253d5;
@@ -23,38 +24,43 @@ pub fn hash_128(bytes: &[u8], seed: u64) -> u128 {
     let mut h2 = seed;
 
     // Body
-    for chunk in bytes.chunks_exact(16) {
-        let k1 = u64::from_le_bytes(chunk[0..8].try_into().expect("oups"));
-        let k2 = u64::from_le_bytes(chunk[8..16].try_into().expect("oups"));
-        h1 ^= k1.wrapping_mul(C1).rotate_left(31).wrapping_mul(C2);
-        h1 = h1
-            .rotate_left(27)
-            .wrapping_add(h2)
-            .wrapping_mul(5)
-            .wrapping_add(C3);
-        h2 ^= k2.wrapping_mul(C2).rotate_left(33).wrapping_mul(C1);
-        h2 = h2
-            .rotate_left(31)
-            .wrapping_add(h1)
-            .wrapping_mul(5)
-            .wrapping_add(C4);
+    let mut iter = bytes.chunks_exact(16);
+    loop {
+        match iter.next() {
+            Some(chunk) => {
+                let k1 = u64::from_le_bytes(chunk[0..8].try_into().unwrap());
+                let k2 = u64::from_le_bytes(chunk[8..16].try_into().unwrap());
+                h1 ^= k1.wrapping_mul(C1).rotate_left(31).wrapping_mul(C2);
+                h1 = h1
+                    .rotate_left(27)
+                    .wrapping_add(h2)
+                    .wrapping_mul(5)
+                    .wrapping_add(C3);
+                h2 ^= k2.wrapping_mul(C2).rotate_left(33).wrapping_mul(C1);
+                h2 = h2
+                    .rotate_left(31)
+                    .wrapping_add(h1)
+                    .wrapping_mul(5)
+                    .wrapping_add(C4);
+            }
+            None => break,
+        }
     }
 
     // Tail
-    let mut remainder = len % 16;
-    let cursor = len - remainder;
-    if remainder > 0 {
-        if remainder > 8 {
+    let remainder = iter.remainder();
+    let remainder_length = remainder.len();
+    if remainder_length > 0 {
+        if remainder_length > 8 {
             let mut tail: [u8; 8] = [0; 8];
-            for (i, b) in bytes[cursor + 8..cursor + remainder].iter().enumerate() {
+            for (i, b) in remainder[8..].iter().enumerate() {
                 tail[i] = *b;
             }
             let k2 = u64::from_le_bytes(tail);
-            remainder = 8;
             h2 ^= k2.wrapping_mul(C2).rotate_left(33).wrapping_mul(C1);
         }
         let mut tail: [u8; 8] = [0; 8];
-        for (i, b) in bytes[cursor..cursor + remainder].iter().enumerate() {
+        for (i, b) in remainder[..min(remainder_length, 8)].iter().enumerate() {
             tail[i] = *b;
         }
         let k1 = u64::from_le_bytes(tail);

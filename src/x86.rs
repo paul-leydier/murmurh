@@ -1,10 +1,25 @@
 
+const C1: u32 = 0x239b961b;
+const C2: u32 = 0xab0e9789;
+const C3: u32 = 0x38b34ae5;
+const C4: u32 = 0xa1e38b93;
+const C5: u32 = 0x561ccd1b;
+const C6: u32 = 0x0bcaa747;
+const C7: u32 = 0x96cd1c35;
+const C8: u32 = 0x32ac3b17;
+const C9: u32 = 0x85ebca6b;
+const C10: u32 = 0xc2b2ae35;
+const R1: u32 = 13;
+const R2: u32 = 15;
+const R3: u32 = 16;
+const R4: u32 = 17;
+const R5: u32 = 18;
+const R6: u32 = 19;
+const M: u32 = 5;
+
+
 #[inline]
 fn fmix32(mut k: u32) -> u32 {
-    const C9: u32 = 0x85ebca6b;
-    const C10: u32 = 0xc2b2ae35;
-    const R1: u32 = 13;
-    const R3: u32 = 16;
     k ^= k >> R3;
     k = k.wrapping_mul(C9);
     k ^= k >> R1;
@@ -14,21 +29,6 @@ fn fmix32(mut k: u32) -> u32 {
 }
 
 pub fn hash_128(bytes: &[u8], seed: u32) -> u128 {
-    const C1: u32 = 0x239b961b;
-    const C2: u32 = 0xab0e9789;
-    const C3: u32 = 0x38b34ae5;
-    const C4: u32 = 0xa1e38b93;
-    const C5: u32 = 0x561ccd1b;
-    const C6: u32 = 0x0bcaa747;
-    const C7: u32 = 0x96cd1c35;
-    const C8: u32 = 0x32ac3b17;
-    const R1: u32 = 13;
-    const R2: u32 = 15;
-    const R3: u32 = 16;
-    const R4: u32 = 17;
-    const R5: u32 = 18;
-    const R6: u32 = 19;
-    const M: u32 = 5;
     let len = bytes.len();
     let mut h1: u32 = seed;
     let mut h2: u32 = seed;
@@ -68,7 +68,9 @@ pub fn hash_128(bytes: &[u8], seed: u32) -> u128 {
     }
 
     // Tail
-    // TODO find a solution to match x64 implementation
+    let mut remainder = len % 16;
+    let cursor = len - remainder;
+
 
     h1 ^= len as u32;
     h2 ^= len as u32;

@@ -1,4 +1,4 @@
-mod x64;
+pub mod x64;
 
 use pyo3::exceptions;
 use pyo3::prelude::*;

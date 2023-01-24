@@ -24,3 +24,21 @@ And you will then be able to run the python unit tests:
 ```shell
 pytest
 ```
+
+## ⏱️ Benchmarks
+
+First, you should install `murmurh` using the release (optimised) build.
+```shell
+maturin develop --release
+```
+
+Then, you can use `timeit` to benchmark:
+```shell
+python -m timeit -s "import murmurh" "murmurh.hash('foo')"
+```
+> 1000000 loops, best of 5: 200 nsec per loop
+
+```shell
+python -m timeit -s "import mmh3" "mmh3.hash128('foo')"
+```
+> 2000000 loops, best of 5: 136 nsec per loop

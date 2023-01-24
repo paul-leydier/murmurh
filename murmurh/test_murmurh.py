@@ -75,3 +75,6 @@ def test_hash(
 ):
     assert murmurh.hash(key, seed=seed, arch=arch, size=size) == expected_int
     assert murmurh.hash_bytes(key, seed=seed, arch=arch, size=size) == expected_bytes
+    assert murmurh.hash_hex(key, seed=seed, arch=arch, size=size) == "{:x}".format(
+        expected_int
+    )

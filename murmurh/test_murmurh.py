@@ -20,6 +20,16 @@ def test_mmh3_128_x64_default_size():
 @pytest.mark.parametrize(
     "test_input,expected",
     [
+        ("", 0),
+    ],
+)
+def test_mmh3_128_x64(test_input: str, expected: str):
+    assert murmurh.hash(test_input, 0) == expected
+
+
+@pytest.mark.parametrize(
+    "test_input,expected",
+    [
         ("", b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"),
     ],
 )

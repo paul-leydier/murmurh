@@ -26,13 +26,23 @@ def test_mmh3_128_x64_default_size():
 
 
 @pytest.mark.parametrize(
-    "test_input,expected",
+    "key,seed, arch, size, expected",
     [
-        ("", 0),
+        ("", 0, "x64", 128, 0),
+        ("", 42, "x64", 128, 277815913556825370913473028741106730275),
+        ("foo", 0, "x64", 128, 168394135621993849475852668931176482145),
+        ("hello world!1234", 0, "x64", 128, 240867822025444006610977441818626719586),
+        (
+            "The quick brown fox jumps over the lazy dog.",
+            0,
+            "x64",
+            128,
+            140055101589960098446263325149249471177,
+        ),
     ],
 )
-def test_mmh3_128_x64(test_input: str, expected: str):
-    assert murmurh.hash(test_input, 0) == expected
+def test_hash(key: str, seed: int, arch: str, size: int, expected: str):
+    assert murmurh.hash(key, seed=seed, arch=arch, size=size) == expected
 
 
 @pytest.mark.parametrize(
